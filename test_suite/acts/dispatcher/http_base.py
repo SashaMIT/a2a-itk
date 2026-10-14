@@ -376,9 +376,10 @@ class HttpDispatcher(Dispatcher):
 
     @staticmethod
     def _is_sse(response: httpx.Response) -> bool:
-        # RFC 9110: the type and subtype are case-insensitive, and parameters
-        # such as charset are not part of the media type. A substring check
-        # accepts text/event-streamextra and nottext/event-stream.
+        # RFC 9110 section 8.3.1: the type and subtype are case-insensitive.
+        # Parameters are part of the media type, and a parameter value may
+        # be case-sensitive, so this compares the type and subtype only.
+        # A substring check accepts text/event-streamextra and nottext/event-stream.
         media_type = (
             response.headers.get('content-type', '').partition(';')[0].strip().lower()
         )
